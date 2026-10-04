@@ -1,12 +1,13 @@
 # Machine Failure Analysis with Python
 
-This project explores machine failure data using pandas and Matplotlib.
+Exploratory analysis of machine failure data using pandas and Matplotlib.
 
 ## Objectives
 
 - Load and inspect the AI4I 2020 Predictive Maintenance dataset.
-- Calculate the overall failure rate and rates for each failure type.
-- Compare average process temperature, torque, and tool wear between samples with and without machine failure.
+- Calculate the overall machine failure rate and rates for each failure type.
+- Compare average torque, tool wear, and temperature difference between samples with and without machine failure.
+- Visualize failure rates by type.
 
 ## Tools
 
@@ -14,16 +15,32 @@ This project explores machine failure data using pandas and Matplotlib.
 - pandas
 - Matplotlib
 
+## Analysis
+
+Machine failure status is represented by:
+
+- `0`: No machine failure
+- `1`: Machine failure
+
+Temperature difference is calculated for each sample as:
+
+`Process temperature [K] − Air temperature [K]`
+
+Average measurements are compared by machine failure status.
+The temperature difference chart includes all machine failures; it is not an analysis restricted to HDF.
+
 ## Results
 
 - Total samples: 10,000
 - Samples with machine failure: 339
+- Samples without machine failure: 9,661
 - Overall machine failure rate: 3.39%
 - No missing values were found.
 
 ### Failure rates by type
 
 Each rate is calculated relative to all 10,000 samples.
+A sample can have more than one failure type, so these percentages should not be added to calculate the overall machine failure rate.
 
 | Failure type | Rate (%) |
 | --- | --- |
@@ -39,46 +56,67 @@ Each rate is calculated relative to all 10,000 samples.
 | --- | --- | --- |
 | Torque (Nm) | 39.63 | 50.17 |
 | Tool wear (min) | 106.69 | 143.78 |
-| Process temperature (K) | 310.00 | 310.29 |
+| Rotational speed (rpm) | 1540.26 | 1496.49 |
 
-Samples with failure had higher average torque and tool wear.
-The difference in average process temperature was small.
+Samples with failure had higher average torque and tool wear,
+and lower average rotational speed.
+
+Average temperature differences are shown in the chart below
+and saved in `comparison_summary.csv`.
+
 These comparisons describe associations and do not establish causation.
+This project performs exploratory analysis and does not train a prediction model.
 
 ## Charts
 
 ### Torque
+
 ![Average torque](average_torque.png)
 
 ### Tool wear
+
 ![Average tool wear](average_tool_wear.png)
 
-### Process temperature
-![Average process temperature](average_process_temperature.png)
+### Temperature difference
+
+![Average temperature difference](average_temperature_difference.png)
+
+### Failure rates by type
+
+![Failure rates by type](failure_type_rates.png)
+
 ## How to run
 
 1. Install Python.
-2. Place `ai4i2020.csv` in the same folder as `main.py`.
-3. Open a terminal in the project folder.
-4. Install the required libraries:
+2. Download or clone this repository.
+3. Ensure `ai4i2020.csv` is in the same folder as `main.py`.
+4. Open a terminal in the project folder.
+5. Install the required libraries:
 
 ```bash
 python -m pip install -r requirements.txt
 ```
 
-5. Run the analysis:
+6. Run the analysis:
 
 ```bash
 python main.py
 ```
 
 Close each chart window to continue to the next chart.
+The script prints analysis results and saves CSV tables and PNG charts
+in the current working directory.
 
 ## Output files
 
-- `comparison_summary.csv`: average torque, tool wear, and rotational speed by failure status.
-- `failure_type_rates.csv`: percentage of samples for each failure type.
-- Three PNG charts comparing torque, tool wear, and process temperature.
+| File | Contents |
+| --- | --- |
+| `comparison_summary.csv` | Average torque, tool wear, rotational speed, and temperature difference by failure status |
+| `failure_type_rates.csv` | Percentage of all samples with each failure type |
+| `average_torque.png` | Average torque by failure status |
+| `average_tool_wear.png` | Average tool wear by failure status |
+| `average_temperature_difference.png` | Average process minus air temperature by failure status |
+| `failure_type_rates.png` | Failure rates by type |
 
 ## Dataset source
 
@@ -92,4 +130,6 @@ UCI Machine Learning Repository.
 
 The dataset contains 10,000 synthetic samples representing
 industrial predictive maintenance conditions.
+
 The original CSV is used without modification.
+Temperature difference is calculated during analysis as an additional column.
